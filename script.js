@@ -173,6 +173,7 @@ async function execute(){
 
     turnOffRedTrafficLight(trafficLightTwo);
     turnOffRedTrafficLight(trafficLightFour);
+    stepOne();
     for(let i=1;i<=count;i++){
 
         southToNorth();
@@ -189,6 +190,8 @@ async function execute(){
 
             turnOnRedTrafficLight(trafficLightTwo);
             turnOnRedTrafficLight(trafficLightFour);
+
+            crossPedestrianTwo();
         }
     }
     for(let i=1;i<=count;i++){
@@ -212,6 +215,173 @@ async function execute(){
 }
 
 
+
+
+
+//persons
+let personInstances=[]
+
+const persons=document.querySelector(".persons");
+
+function generatePerson(rotate,top,left,color){
+    const person=document.createElement("div");
+    person.className="person";
+
+    const head=document.createElement("div"); 
+    head.className="head";
+    const shoulder=document.createElement("div"); 
+    shoulder.className="shoulder";
+    
+    const leftHand=document.createElement("div"); 
+    leftHand.className="left-hand";
+    const rightHand=document.createElement("div"); 
+    rightHand.className="right-hand";
+
+    shoulder.append(leftHand);
+    shoulder.append(rightHand);
+
+    person.append(head);
+
+    person.append(shoulder);
+    
+    if(top){
+        person.style.top=`${top}px`;
+    }
+    
+    if(left){
+        person.style.left=`${left}px`;
+    }
+    
+    if(rotate){
+        person.style.transform=`rotate(${rotate}deg)`;
+    }
+
+    if(color){
+        person.style.backgroundColor=color;
+    }
+    
+    
+    persons.append(person);
+    personInstances.push(person);
+    return person; 
+}
+
+
+async function movePersonRightToLeft(person,start,end,speed) {
+    return new Promise(async (resolve) => {
+    for (let i = start; i <= end; i++) {
+        person.style.left = `${i}px`; 
+        await delay(speed); 
+    }
+    resolve();
+    });
+    // person.style.display='none';
+}
+
+async function movePersonLeftToRight(person,start,end) {
+    return new Promise(async (resolve) => {
+        for (let i = start; i>=end; i--) {
+            person.style.left = `${i}px`; 
+            await delay(10); 
+        }
+    resolve();
+    });
+
+    // person.style.display='none';
+}
+
+async function movePersonTopToBottom(person,start,end,callback) {
+    return new Promise(async (resolve) => {
+        for (let i = start; i <= end; i++) {
+            person.style.top = `${i}px`; 
+            await delay(10); 
+        }
+        if(callback){
+            callback();
+        }
+    resolve();
+    });
+    // person.style.display='none';
+}
+
+async function movePersonBottomToTop(person,start,end) {
+    return new Promise(async (resolve) => {
+        for (let i = start; i>=end; i--) {
+            person.style.top = `${i}px`; 
+            await delay(10); 
+        }
+
+    resolve();
+    });
+    // person.style.display='none';
+}
+
+async function rotatePerson(person,rotate) {
+    return new Promise(async (resolve) => {
+        person.style.transform = `rotate(${rotate/2}deg)`; 
+        await delay(10);
+        person.style.transform = `rotate(${rotate}deg)`; 
+    resolve();
+    });
+    // person.style.display='none';
+}
+
+
+
+async function crossPedestrianOne(person,top,from,to){
+    
+    await movePersonTopToBottom(person,0,top,async() => {
+    await rotatePerson(person, 90);
+    await delay(20);
+
+    await movePersonLeftToRight(person,from,to);
+    await delay(100);
+    await rotatePerson(person, -90);
+    movePersonTopToBottom(person,top,top+50,()=>{
+        return;
+    });
+})
+}
+//top,from,to
+
+let toValue=500;
+
+
+async function stepOne(){
+    toValue=500;
+    return new Promise(async (resolve) => {
+        for(let i=0;i<7;i++){
+
+            const person1=generatePerson(0,100,540,'green');
+            crossPedestrianOne(person1,720,540,toValue);
+            toValue-=40;
+            await delay(1000);
+        }
+    resolve();
+    
+    });
+}
+   
+
+
+async function crossPedestrianTwo(){
+    let toValue=500;
+    for(let i=0;i<7;i++){
+        let person=personInstances[i];
+        console.log(person);
+        await movePersonRightToLeft(person,toValue,1800,2);
+        toValue-=40
+        // await delay(1000);
+        
+        person.style.display='none'
+    }
+}
+
+
+// (async()=>{
+    
+    
+//     await delay(10000);
+   
+// })()
 execute();
-
-

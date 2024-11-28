@@ -11,11 +11,18 @@
     
 }
 
+.platform{
+    position: absolute;
+    width: 600px;
+    height: 300px;
+    background-color: grey;
+}
+
 .green-block{
     position: absolute;
     z-index: 1;
-    width: 600px;
-    height: 300px;
+    width: 500px;
+    height: 200px;
     background-color: greenyellow
 }
 
@@ -28,35 +35,37 @@
 }
 
 .bush-one{
-    top:50px;
+    top:30px;
     left:130px;
 }
 
 .bush-two{
-    top:50px;
+    top:35px;
     left:200px;
 }
 
-#block-1{
+#block-1,.green-block-one{
     top:0;
     left:0;
+    
     border-bottom-right-radius: 30px;
 }
 
-#block-2{
+
+#block-2,.green-block-two{
     top: 0;
     right:0;
     border-bottom-left-radius: 30px;
 }
 
-#block-3{
+#block-3,.green-block-three{
     bottom:0;
     left:0;
     border-top-right-radius: 30px;
 }
 
-#block-4{
-    bottom: 0;
+#block-4,.green-block-four{
+    bottom: 0 !important;
     right:0;
     border-top-left-radius: 30px;
 }
@@ -226,4 +235,65 @@
     top:-25px;
     margin: auto;
     background-color: inherit;
+}
+
+.zebra-crossing{
+    position: absolute;
+    z-index: 1;
+    top:300px;
+    left:470px;
+    display: flex;
+    flex-direction: column;
+    gap:7px;
+    background-color: transparent;
+}
+
+.steps{
+    width: 100px;
+    height: 20px;
+    background-color: white;
+}
+
+.zebra-crossing-two{
+    transform: rotate(90deg);
+    top:515px;
+    left:813px;
+}
+
+.person{
+    position: absolute;
+    z-index: 10;
+    top:100px;
+    left:550px ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+}
+
+.head{
+    position: absolute;
+    width:15px;
+    height: 15px;
+    margin: auto;
+    z-index: 20;
+    background-color: black; 
+    border-radius: 100%;
+}
+
+.shoulder{
+    position: absolute;
+    width: 50px;
+    height: 20px;
+    background-color: inherit;
+    border-radius: 10px;
+}
+
+.left-hand{
+    position: relative;
+    /* background-color: ; */
+}
+
+.right-hand{
+    position: relative;
 }
