@@ -1,3 +1,30 @@
+const timerWorker = new Worker('timerWorker.js');
+const timerPromises = new Map();
+
+function workerDelay(ms) {
+    return new Promise((resolve) => {
+        const id = Math.random().toString(36).substring(2); // Unique ID for the timer
+        timerPromises.set(id, resolve);
+
+        // Send delay request to the worker
+        timerWorker.postMessage({ id, delay: ms });
+    });
+}
+
+timerWorker.onmessage = function (event) {
+    const { id } = event.data;
+    const resolve = timerPromises.get(id);
+    if (resolve) {
+        resolve(); // Resolve the corresponding promise
+        timerPromises.delete(id); // Clean up
+    }
+};
+
+async function delay(ms) {
+    return workerDelay(ms);
+}
+//
+
 const cars=document.querySelector('.cars');
 const trafficLightOne=document.querySelector('.tl-one');
 const trafficLightTwo=document.querySelector('.tl-two');
@@ -62,9 +89,9 @@ function generateCar(rotation,top,left,color){
 
 
 
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+// function delay(ms) {
+//     return new Promise(resolve => setTimeout(resolve, ms));
+// }
 
 async function moveCarRightToLeft(car,start,end) {
     for (let i = start; i <= end; i++) {
