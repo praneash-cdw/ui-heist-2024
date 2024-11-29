@@ -31,28 +31,9 @@ const trafficLightTwo=document.querySelector('.tl-two');
 const trafficLightThree=document.querySelector('.tl-three');
 const trafficLightFour=document.querySelector('.tl-four');
 
-function north_south(){
-    setInterval(()=>{
-        console.log("north south");
-    },1000);
-}
 
-function east_west(){
-    setInterval(()=>{
-        console.log("east west");
-    },2000);
-}
 
-function main(){
-    setInterval(()=>{
-        
-        console.log("end");
-    },3000);
-}
 
-// north_south();
-// east_west();
-// main();
 let carCount=0;
 let carInstances=[];
 function generateCar(rotation,top,left,color){
@@ -89,9 +70,6 @@ function generateCar(rotation,top,left,color){
 
 
 
-// function delay(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-// }
 
 async function moveCarRightToLeft(car,start,end) {
     for (let i = start; i <= end; i++) {
@@ -135,23 +113,13 @@ function getRandomColor() {
     for (let i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)];
     }
+    if (color === '#000000') {
+        color = '#FF0000';
+    }
     return color;
 }
 
-// logical execution
 
-
-
-// let car2=generateCar(0,90,190);
-// carInstances.push(car2);
-
-// moveCarRightToLeft(carInstances[0],0,1800);
-
-// moveCarLeftToRight(carInstances[1],1800,0);
-
-
-
-// moveCarTopToBottom(carInstances[0],1000,0);
 
 
 
@@ -192,56 +160,6 @@ function turnOffRedTrafficLight(trafficLight){
     const greenLight = trafficLight.querySelector('.green');
     greenLight.style.backgroundColor="#01ff01";
 }
-
-async function execute(){
-    let count =2;
-    turnOnRedTrafficLight(trafficLightOne);
-    turnOnRedTrafficLight(trafficLightThree);
-
-    turnOffRedTrafficLight(trafficLightTwo);
-    turnOffRedTrafficLight(trafficLightFour);
-    stepOne();
-    for(let i=1;i<=count;i++){
-
-        southToNorth();
-        northToSouth();
-        await delay(14000); 
-        southToNorth();
-        northToSouth();
-        if(i<count){
-            await delay(22000); 
-        }else{
-            await delay(10000);  
-            turnOffRedTrafficLight(trafficLightOne);
-            turnOffRedTrafficLight(trafficLightThree);
-
-            turnOnRedTrafficLight(trafficLightTwo);
-            turnOnRedTrafficLight(trafficLightFour);
-
-            crossPedestrianTwo();
-        }
-    }
-    for(let i=1;i<=count;i++){
-        eastToWest();
-        westToEast();
-        await delay(12000); 
-        eastToWest();
-        if(i<count){
-            await delay(18000); 
-        }
-        else{
-            await delay(15000);  
-            turnOffRedTrafficLight(trafficLightTwo);
-            turnOffRedTrafficLight(trafficLightFour);
-
-            turnOnRedTrafficLight(trafficLightOne);
-            turnOnRedTrafficLight(trafficLightThree);            
-        }
-    }
-    execute();
-}
-
-
 
 
 
@@ -302,7 +220,7 @@ async function movePersonRightToLeft(person,start,end,speed) {
     }
     resolve();
     });
-    // person.style.display='none';
+    
 }
 
 async function movePersonLeftToRight(person,start,end) {
@@ -313,9 +231,8 @@ async function movePersonLeftToRight(person,start,end) {
         }
     resolve();
     });
-
-    // person.style.display='none';
 }
+    
 
 async function movePersonTopToBottom(person,start,end,callback) {
     return new Promise(async (resolve) => {
@@ -328,7 +245,7 @@ async function movePersonTopToBottom(person,start,end,callback) {
         }
     resolve();
     });
-    // person.style.display='none';
+   
 }
 
 async function movePersonBottomToTop(person,start,end) {
@@ -340,8 +257,7 @@ async function movePersonBottomToTop(person,start,end) {
 
     resolve();
     });
-    // person.style.display='none';
-}
+}    
 
 async function rotatePerson(person,rotate) {
     return new Promise(async (resolve) => {
@@ -350,7 +266,7 @@ async function rotatePerson(person,rotate) {
         person.style.transform = `rotate(${rotate}deg)`; 
     resolve();
     });
-    // person.style.display='none';
+    
 }
 
 
@@ -363,13 +279,15 @@ async function crossPedestrianOne(person,top,from,to){
 
     await movePersonLeftToRight(person,from,to);
     await delay(100);
+    await rotatePerson(person, -90/2);
+    await delay(50);
     await rotatePerson(person, -90);
     movePersonTopToBottom(person,top,top+50,()=>{
         return;
     });
 })
 }
-//top,from,to
+
 
 let toValue=500;
 
@@ -379,10 +297,10 @@ async function stepOne(){
     return new Promise(async (resolve) => {
         for(let i=0;i<7;i++){
 
-            const person1=generatePerson(0,100,540,'green');
+            const person1=generatePerson(0,100,540,getRandomColor());
             crossPedestrianOne(person1,720,540,toValue);
             toValue-=40;
-            await delay(1000);
+            await delay(8000);
         }
     resolve();
     
@@ -408,7 +326,7 @@ async function crossPedestrianTwo() {
 
         
         promises.push(
-            movePersonRightToLeft(person, toValue, 1800, 10).then(() => {
+            movePersonRightToLeft(person, toValue, 1800, 20).then(() => {
                 console.log(`Animation complete for person ${i}`);
                 person.style.display = 'none'; 
             })
@@ -425,10 +343,52 @@ async function crossPedestrianTwo() {
 
 
 
-// (async()=>{
-    
-    
-//     await delay(10000);
-   
-// })()
+async function execute(){
+    let count =2;
+    turnOnRedTrafficLight(trafficLightOne);
+    turnOnRedTrafficLight(trafficLightThree);
+
+    turnOffRedTrafficLight(trafficLightTwo);
+    turnOffRedTrafficLight(trafficLightFour);
+    stepOne();
+    for(let i=1;i<=count;i++){
+
+        southToNorth();
+        northToSouth();
+        await delay(14000); 
+        southToNorth();
+        northToSouth();
+        if(i<count){
+            await delay(22000); 
+        }else{
+            await delay(10000);  
+            turnOffRedTrafficLight(trafficLightOne);
+            turnOffRedTrafficLight(trafficLightThree);
+
+            turnOnRedTrafficLight(trafficLightTwo);
+            turnOnRedTrafficLight(trafficLightFour);
+
+            crossPedestrianTwo();
+        }
+    }
+    for(let i=1;i<=count;i++){
+        eastToWest();
+        westToEast();
+        await delay(12000); 
+        eastToWest();
+        if(i<count){
+            await delay(18000); 
+        }
+        else{
+            await delay(15000);  
+            turnOffRedTrafficLight(trafficLightTwo);
+            turnOffRedTrafficLight(trafficLightFour);
+
+            turnOnRedTrafficLight(trafficLightOne);
+            turnOnRedTrafficLight(trafficLightThree);            
+        }
+    }
+    execute();
+}
+
 execute();
