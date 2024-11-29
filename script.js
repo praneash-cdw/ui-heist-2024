@@ -364,18 +364,38 @@ async function stepOne(){
    
 
 
-async function crossPedestrianTwo(){
-    let toValue=500;
-    for(let i=0;i<7;i++){
-        let person=personInstances[i];
-        console.log(person);
-        await movePersonRightToLeft(person,toValue,1800,2);
-        toValue-=40
-        // await delay(1000);
+
+async function crossPedestrianTwo() {
+    let toValue = 500;
+    const promises = []; // Array to hold animation promises
+
+    // Iterate through all person instances and create animation promises
+    for (let i = 0; i < 7; i++) {
+        if (!personInstances[i]) {
+            console.error(`Person instance not found at index ${i}`);
+            continue;
+        }
+
+        let person = personInstances[i];
+        console.log(`Starting animation for person ${i}:`, person);
+
         
-        person.style.display='none'
+        promises.push(
+            movePersonRightToLeft(person, toValue, 1800, 10).then(() => {
+                console.log(`Animation complete for person ${i}`);
+                person.style.display = 'none'; 
+            })
+        );
+
+        toValue -= 40; 
     }
+
+    // Wait for all animations to complete
+    await Promise.all(promises);
+    console.log('All pedestrians have crossed.');
+    personInstances=[];
 }
+
 
 
 // (async()=>{
